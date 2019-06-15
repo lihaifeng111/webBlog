@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	   <meta charset="UTF-8">
+		<title>编辑文章</title>
+		
+		 <script type="text/javascript" src="js/jquery-1.8.0.min.js">   </script>
+		<script src="ckeditor/ckeditor.js"></script>
+	    <script type="text/javascript" src="js/checkSubmit.js">
+	    </script>
+		<script type="text/javascript">
+	window.onload = function() {
+		CKEDITOR.replace('description');
+	};
+</script>
+		<!-- input样式 -->
+		<style>
+.form-control {
+	display: block;
+	width: 300px;
+	height: 40px;
+	padding: 6px 12px;
+	font-size: 14px;
+	line-height: 1.428571429;
+	color: #555555;
+	vertical-align: middle;
+	background-color: #ffffff;
+	border: 1px solid #cccccc;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	-webkit-transition: border-color ease-in-out .15s, box-shadow
+		ease-in-out .15s;
+	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+.form-control:focus {
+	border-color: #66afe9;
+	outline: 0;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px
+		rgba(102, 175, 233, 0.6);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px
+		rgba(102, 175, 233, 0.6);
+}
+</style>
+
+		<!-- 下拉框样式 -->
+		<style type="text/css">
+.left {
+	width: 200px;
+	height: 40px;
+	border-radius: 5px;
+	box-shadow: 0 0 5px #ccc;
+	position: relative;
+}
+
+.select {
+	border: none;
+	outline: none;
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	padding-left: 60px;
+}
+
+.left:after {
+	content: "";
+	width: 29px;
+	height: 19px;
+	background: url(img/jiantou.png) no-repeat center;
+	position: absolute;
+	right: 20px;
+	top: 25%;
+	pointer-events: none;
+}
+</style>
+
+		<!-- 按钮样式 -->
+		<style type="text/css">
+.tijiao {
+	width: 100px;
+	height: 40px;
+	padding: 8px;
+	background-color: red;
+	border-color: #357ebd;
+	color: #fff;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px; /* future proofing */
+	-khtml-border-radius: 10px; /* for old Konqueror browsers */
+	text-align: center;
+	vertical-align: middle;
+	border: 1px solid transparent;
+	font-weight: 900;
+	font-size: 125%;
+	padding: 8px;
+}
+</style>
+
+		<style type="text/css">
+.left {
+	float: left;
+}
+
+.right {
+	float: left;
+	margin:0px 5px;
+}
+</style>
+
+
+	</head>
+
+	<body>
+		<form style="margin-left: 20px;margin-right: 20px;margin-top: 20px;height: 600px" action="saveArticle.do" method="post" id="saveSubmit">			
+			<input placeholder="输入文章标题" class="form-control" type="text"
+				name=articleName id="position"></input>
+				<span id="test" style="color:red"></span>
+			<br />
+			<div class="left">
+				<select class="select" name="title">
+					<option value="Java">
+						Java
+					</option>
+					<option value="Golang">
+						Golang
+					</option>
+					<option value="新闻">
+						新闻
+					</option>
+				</select>
+			</div>
+			
+			<div class="right">
+				<button class="tijiao" type="submit">
+					提交
+				</button>
+			</div>
+			<br />
+			
+			&nbsp;
+			<br />
+			<div >
+				<textarea  name="text" id="description" ></textarea>
+			</div>
+			<span id="aaa"></span>
+		</form>
+		<!--  
+	    <script type="text/javascript">
+		var a=CKEDITOR.instances.description.getData();
+		
+		</script>
+	    -->
+	</body>
+</html>

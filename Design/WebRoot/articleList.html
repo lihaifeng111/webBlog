@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>文章数据</title>
+    <meta name="description" content="这是一个 index 页面">
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="icon" type="image/png" href="assets/i/favicon.png">
+    <link rel="apple-touch-icon-precomposed" href="assets/i/app-icon72x72@2x.png">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI" />
+    <link rel="stylesheet" href="assets/css/amazeui.min.css" />
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="assets/css/app.css">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/getArticles.js"></script>
+    <script type="text/javascript" src="js/manageArticleType.js"></script>
+    <script type="text/javascript" src="js/deleteArticle.js"></script>
+    <script type="text/javascript" src="js/findArticle.js"></script>
+        <script type="text/javascript">
+          window.onload=function(){
+           getAllArticles();
+    };
+    </script>
+</head>
+
+<body data-type="generalComponents">
+
+
+    <header class="am-topbar am-topbar-inverse admin-header">
+        <div class="am-topbar-brand">
+        </div>
+        <div class="am-icon-list tpl-header-nav-hover-ico am-fl am-margin-right">
+
+        </div>
+
+        <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
+
+        <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+
+           <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list tpl-header-list">
+
+                <li class="am-dropdown" data-am-dropdown data-am-dropdown-toggle>
+                       <a href="restart.do" class="am-icon-home">注销</a>
+                   
+                </li>
+         <!-- 
+                <li class="am-dropdown" data-am-dropdown data-am-dropdown-toggle>
+                       <a href="login.html" class="am-icon-home">登录</a>
+                   
+                </li>
+              -->   
+            </ul>
+        </div>
+    </header>
+
+
+
+
+
+
+
+    <div class="tpl-page-container tpl-page-header-fixed">
+
+
+        <div class="tpl-content-wrapper">
+            <div class="tpl-content-page-title">
+                数据表格
+            </div>
+            <ol class="am-breadcrumb">
+                <li><a href="about.html" class="am-icon-home">返回</a></li>
+    
+            </ol>
+            <div class="tpl-portlet-components">
+                <div class="portlet-title">
+                    <div class="caption font-green bold">
+                        <span class="am-icon-code"></span> 列表
+                    </div>
+                    <div class="tpl-portlet-input tpl-fz-ml">
+                        <div class="portlet-input input-small input-inline">
+                            <div class="input-icon right">
+                                <i class="am-icon-search"></i>
+                                <input type="text" class="form-control form-control-solid" placeholder="文章标题" id="findArticle"> </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="tpl-block">
+                    <div class="am-g">
+                        <div class="am-u-sm-12 am-u-md-3">
+                            <div class="am-form-group">
+                                <select data-am-selected="{btnSize: 'sm'}" id="ArticleType" onchange="getArticleType()">
+                                 <option value="all">all</option>
+                                 <option value="Java">Java</option>
+                                 <option value="Golang">Golang</option>
+                                 <option value="新闻">新闻</option>
+                               </select>
+                            </div>
+                        </div>
+                      </div>
+                    <div class="am-g">
+                        <div class="am-u-sm-12">
+                            <form class="am-form">
+                                <table class="am-table am-table-striped am-table-hover table-main">
+                                    <thead>
+                                        <tr>
+                                            <th class="table-id">ID</th>
+                                            <th class="table-title">标题</th>
+                                            <th class="table-type">类别</th>
+                                            <th class="table-author am-hide-sm-only">作者Id</th>
+                                            <th class="table-date am-hide-sm-only">发表日期</th>
+                                            <th class="table-set">操作</th>
+                                        </tr>
+                                    </thead>
+                                    
+                                    <tbody id="modify_article">
+                                     </tbody>
+                                </table>
+                             <!--    <div class="am-cf">
+
+                                    <div class="am-fr">
+                                        <ul class="am-pagination tpl-pagination">
+                                            <li class="am-disabled"><a href="#">«</a></li>
+                                            <li class="am-active"><a href="#">1</a></li>
+                                            <li><a href="#">2</a></li>
+                                            <li><a href="#">3</a></li>
+                                            <li><a href="#">4</a></li>
+                                            <li><a href="#">5</a></li>
+                                            <li><a href="#">»</a></li>
+                                        </ul>
+                                    </div>
+                                </div>   -->
+                                <hr>
+
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="tpl-alert"></div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+    </div>
+
+
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/amazeui.min.js"></script>
+    <script src="assets/js/app.js"></script>
+</body>
+
+</html>

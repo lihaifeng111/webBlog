@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd
+           http://www.springframework.org/schema/tx 
+   http://www.springframework.org/schema/tx/spring-tx.xsd">
+   
+    <!-- 1.指定Spring框架注解的扫描区域 -->
+    <context:component-scan base-package="service"/>
+    
+     <!-- 2.加载外部属性文件(数据库连接的数据) -->  
+     <context:property-placeholder location="classpath:db.properties"/>  
+       
+      <!-- 3.指定访问数据库的数据源 -->    
+     <!-- 使用Spring框架spring-jdbc-4.0.0.M2.jar包自带的数据源
+          org.springframework.jdbc.datasource.DriverManagerDataSource
+                          底层也是对jdbc的封装
+      -->
+      
+      <bean id="ds" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <!-- 属性注入 -->
+         <property name="driverClassName" value="${jdbc.driver}"/>
+         <property name="url" value="${jdbc.url}"/>
+         <property name="username" value="${jdbc.username}"/>
+         <property name="password" value="${jdbc.password}"/>
+      </bean>  
+      
+       
+     <!-- 4.使用MyBatis3.x框架操作数据库 -->
+     <!-- 4.1 配置SessionFactory 
+                          使用mybatis-spring-1.2.1.jar整合包里面的SqlSessionFactoryBean
+                          获取SessionFactory                
+     -->
+      <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+     
+     
+      <!-- 指定数据源 -->
+        <property name="dataSource" ref="ds"></property>
+      
+        <!-- 指定mybatis.xml配置文件的路径 -->
+        <property name="configLocation" value="classpath:mybatis.xml"></property>
+        
+         <!-- 指定mybatis框架映射文件的路径 -->
+          <property name="mapperLocations" value="classpath:mapper/*.xml"></property>
+       </bean>
+       
+       <!-- 4.2 配置MyBatis3.x框架扫描器:MapperScannerConfigurer 
+                          使用mybatis-spring-1.2.1.jar整合包里面的MapperScannerConfigurer
+     -->
+      <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 指定扫描映射文件的路径 -->
+        <property name="basePackage" value="mapper"/>
+     </bean>
+     
+     <!-- 5.配置事物:基于xml实现的声明式事物 -->
+     <!-- 5.1 配置事物管理器 -->
+     <bean id="tx" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+         <!-- 指定 数据源 -->
+         <property name="dataSource" ref="ds"></property>
+     </bean>
+     
+      <!-- 5.2 配置事物事物增强和AOP -->
+      <tx:advice id="txAdvice" transaction-manager="tx">
+         <!-- 指定事物增强方案具体添加到哪些方法上面 -->
+          <tx:attributes >
+            <tx:method name="save*"/>
+            <tx:method name="delete*"/>
+            <tx:method name="insert*"/>
+            <tx:method name="update*"/>
+          </tx:attributes>
+      </tx:advice>
+      
+      <aop:config>
+         <!-- 指定切点表达式 -->
+          <aop:pointcut expression="execution(* service.*.*(..))" id="pointcut"/>
+           <!-- 配置切面 -->
+           <aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut"/>
+      </aop:config>
+   </beans>

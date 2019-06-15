@@ -1,0 +1,244 @@
+//获取url中的参数工具方法 add by YHT
+(function($){
+		$.getUrlParam = function(name) {
+			var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+			var r = window.location.search.substr(1).match(reg);
+			if (r!=null) return unescape(r[2]); return null;
+		}
+})(jQuery);
+
+
+var sessionId = $.getUrlParam('sessionId');
+
+if(sessionId != undefined || sessionId != null){
+	login();
+}
+	// 判断用户登陆状态 add by YHT
+	function login() {
+		$.ajax({
+			type : "GET",
+			url : remoteUrl + "user/login?sessionId="+sessionId,
+			dataType : "json",
+			data : null,
+			async:false,
+			success : function(data) {
+				var s=data.status;
+				
+				var message = data.message;
+				switch(s){
+					case 1://登录成功
+						addCookie("userId",data.resource.id,10);
+						addCookie("userName",data.resource.nickName,10);
+						break;
+					default:
+						alert(message);
+						window.location.href = elearningUrl;
+						break;
+				}
+			}
+		});
+	}
+	//转换日期格式函数，time为毫秒数，format为格式
+	function format(time, format){
+	    var t = new Date(time);
+	    var tf = function(i){return (i < 10 ? '0' : '') + i};
+	    return format.replace(/yyyy|MM|dd|HH|mm|ss/g, function(a){
+	        switch(a){
+	            case 'yyyy':
+	                return tf(t.getFullYear());
+	                break;
+	            case 'MM':
+	                return tf(t.getMonth() + 1);
+	                break;
+	            case 'mm':
+	                return tf(t.getMinutes());
+	                break;
+	            case 'dd':
+	                return tf(t.getDate());
+	                break;
+	            case 'HH':
+	                return tf(t.getHours());
+	                break;
+	            case 'ss':
+	                return tf(t.getSeconds());
+	                break;
+	        }
+	    })
+	}
+	
+
+	var userId=getCookie("userId");
+	var userName=getCookie("userName");
+	
+	function examnow(eid,euid,url){	
+		
+			var u=url.split("/");
+			//arrUrl[arrUrl.length-1].split(".")[0]
+			var paperName=u[u.length-1].split(".")[0];
+			
+			addCookie("examPaperId_"+paperName,eid,10);
+			addCookie("examUserId_"+paperName,euid,10);
+
+		$.ajax({
+			type:"get",
+			url:remoteUrl + "web/"+userId+"/exam/updateExamState/"+euid,
+			async:true,
+			dataType:"json",
+			success:function(result){
+				if(result.status==1){
+					window.location.href=".."+url;
+				}else{
+					alert("请求不成功，请稍候重试！");
+				}
+			}
+		});
+	}
+	var num_entries = 0; //总条数
+	var per_page=10; //每页显示条数
+	var pageIndex = 0; //页面索引初始值  
+	$.ajax({
+		type : "get",
+		url :  remoteUrl + "web/"+userId+"/exam/getExamCountList?date="+(new Date()),//返回总条数
+		async : true,
+		dataType : "json",
+		success : function(num){
+			num_entries=num.resource;
+			if(num_entries!=0){
+				//分页开始
+				var initPagination = function() {	
+				// 创建分页
+				$("#Pagination").pagination(num_entries, {		
+					items_per_page:per_page, //每页显示条数
+					num_display_entries: 10, //主体页数
+					num_edge_entries: 1, //边缘页数
+					prev_text:"< 上一页",
+					next_text:"下一页 >",
+					current_page: pageIndex,   //当前页索引
+					callback: pageselectCallback
+					});
+				}();
+				//分页结束
+			}else{
+				$(".dataerror").show().html("没有历史数据");
+			}
+		},
+		error:function(data){
+			//判断用户是否登录
+			var s=data.status;
+				$(".dataerror").show().html(data.message);				
+			}
+		});
+
+
+	function pageselectCallback(index, jq){//index页数索引值，初始为0	
+		var now=new Date().getTime();
+		$.ajax({
+			type : "post",
+			url : remoteUrl + "web/"+userId+"/exam/getTime",
+			async : false,
+			dataType : "json",
+			success : function(result){
+				now=result.resource;
+			}
+		});
+		$.ajax({
+			type : "get",
+			url : remoteUrl + "web/"+userId+"/exam/getExamList/"+(index+1)+"/"+per_page,
+			async : true,
+			dataType : "json",
+			success : function(result){
+				$(".dataerror").hide();
+				$("#examtab").empty();
+				$("#examtab").show();
+				var re=result.resource;
+				var mytab=$("#examtab");
+				for(var i=0;i<re.length;i++){				 
+					var d=format(re[i].examStartTime, 'yyyy-MM-dd HH:mm:ss');//时间格式转换
+					//考试状态
+					var state=re[i].examState;
+					
+					if(state==0 || state==3){
+						var endTime=re[i].examStartTime+re[i].examTimeLimit*60*1000;
+						if(now>endTime){//未参考，且考试已经结束
+							state=4;
+						}
+					}
+					
+					
+					
+					var ststr;// 考试状态
+					var operate;//操作
+					var nowurl="'"+re[i].url+"'";
+					switch(state){
+						case 0:
+							ststr="未参考";
+							operate='<a class="kaoshi" onclick="examnow('+re[i].examPaperId+','+re[i].examUserId+','+nowurl+')"></a>';
+							break;
+						case 3:
+							ststr="正在考试";
+							operate='<a class="kaoshi" onclick="examnow('+re[i].examPaperId+','+re[i].examUserId+','+nowurl+')"></a>';
+							break;
+						case 4:
+							ststr="未参考";
+							operate='结束|<a href="..'+re[i].url+'" target="_blank">查看</a>';
+							break;
+						case 5:
+							ststr="已交卷";
+							operate='判卷中';
+							break;
+						case 1:
+							ststr="已交卷";
+							operate='判卷中';
+							break;
+						default:
+							ststr="已批阅";
+							operate='<a href="'+re[i].paperUrl+'" target="_blank">查看</a>';
+							break;
+					}
+					
+					var deleteHref= '<a onclick="deleteExamUser('+re[i].examUserId+')">删除</a>';
+					//读出
+					mytab.append('<tr class="result">'
+					+'<td width="5%">'+(i+1)+'</td>'
+					+'<td>'+re[i].examName+'</td>'
+					+'<td width="20%">'+d+'</td>'
+	// 				+'<td width="10%">'+re[i].examTimeLimit+'分钟</td>'
+					+'<td width="10%">'+ststr+'</td>'
+					+'<td width="7%">'+re[i].score+'</td>'
+					+'<td width="7%">'+re[i].userScore+'</td>'
+					+'<td width="10%">'+operate+'</td>'
+					//+'<td>'+deleteHref+'</td>'
+					+'</tr>');
+				}
+				},
+				error:function(){
+					$("#examtab").hide();
+					$(".dataerror").show().html("无法获取数据");
+				}
+		});
+		return false;
+	}
+	
+	
+	// 删除考试
+	function deleteExamUser(euid){
+		var userId= getCookie("userId");
+		$.ajax({
+			type:"get",
+			url:remoteUrl + "web/"+userId+"/exam/deleteExamUser/"+euid,
+			async:true,
+			dataType:"json",
+			success:function(result){
+				if(result.status==1){
+					window.location.reload();
+				}
+			}
+		});
+	}
+	
+$(document).ready(function(){
+	//$("#userName").html(userName);
+	//$("#indexUrl").attr("href",elearnRemote);
+	//var train = "<a href='index.html?sessionId="+sessionId+"'>在线训练</a>";
+	//$("#trainUrl").html(train);
+});

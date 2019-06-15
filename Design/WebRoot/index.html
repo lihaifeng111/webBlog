@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <title>Document</title>
+  <link rel="stylesheet" type="text/css" href="./layui/css/layui.css">
+  <link rel="stylesheet" type="text/css" href="./css/main.css">
+<script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/selectType.js"></script>
+<script type="text/javascript">
+  window.onload=function(){
+    getAllArticle();
+  };
+</script>
+</script>
+		<style type="text/css">
+.left {
+	width: 200px;
+	height: 40px;
+	border-radius: 5px;
+	box-shadow: 0 0 5px #ccc;
+	position: relative;
+}
+
+.select {
+	border: none;
+	outline: none;
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	padding-left: 60px;
+}
+
+.left:after {
+	content: "";
+	width: 29px;
+	height: 19px;
+	background: url(img/jiantou.png) no-repeat center;
+	position: absolute;
+	right: 20px;
+	top: 25%;
+	pointer-events: none;
+}
+</style>
+</script>
+</head>
+<body>
+  <div class="header">
+    <div class="menu-btn">
+      <div class="menu"></div>
+    </div>
+    <h1 class="logo">
+      <a href="index.html">
+        <span>MYBLOG</span>
+        <img src="./img/logo.png">
+      </a>
+    </h1>
+    <div class="nav">
+      <a href="index.html" class="active">文章</a>
+      <!--  <a href="whisper.html">微语</a>-->
+      <a href="leacots.do">留言</a>
+      <!--<a href="album.html"></a> 
+      <a href="about.html">关于</a>-->
+      <a href="new.do">发表</a>
+      <a href="login.html">登录</a>
+      <a href="regist.html">注册</a>
+       <a href="restart.do">注销</a>
+    </div>
+    <ul class="layui-nav header-down-nav">
+      <li class="layui-nav-item"><a href="index.html" class="active">文章</a></li>
+      <!-- <li class="layui-nav-item"><a href="whisper.html">微语</a></li>-->
+      <li class="layui-nav-item"><a href="leacots.html">留言</a></li>
+     <!--  <li class="layui-nav-item"><a href="album.html">相册</a></li>
+      <li class="layui-nav-item"><a href="about.html">关于</a></li>-->
+      <li class="layui-nav-item"><a href="new.html">发表</a></li>
+      <li class="layui-nav-item"><a href="login.html">登录</a></li>
+      <li class="layui-nav-item"><a href="regist.html">注册</a></li>
+       <li class="layui-nav-item"><a href="restart.do">注销</a></li>
+    </ul>
+    <p class="welcome-text">
+      <a href="about.do">个人中心 </a>
+        </p>
+  </div>
+
+  <div class="banner">
+    <div class="cont w1000">
+      <div class="title">
+        <h3>MY<br />BLOG</h3>
+        <h4>well-balanced heart</h4>
+      </div>
+      <!--<div class="amount">
+        <p><span class="text">访问量</span><span class="access">1000</span></p>
+        <p><span class="text">日志</span><span class="daily-record">1000</span></p>
+      </div>
+      -->
+    </div>
+  </div>
+  <div class="tlinks">Collect from <a href="http://www.cssmoban.com/" >网页模板</a></div>
+  <div class="content">
+    <div class="cont w1000">
+      <div class="title">
+        <span class="layui-breadcrumb" lay-separator="|">
+          <a href="javascript:;" class="active">Explore the world</a>
+        </span>
+      </div>
+
+ <!-- <div class="collapse navbar-collapse" id="header-navbar">
+	<form class="navbar-form visible-xs" action="/Search" method="post">
+	  <div class="input-group">
+		<input type="text" name="keyword" class="form-control" placeholder="请输入关键字" maxlength="20" autocomplete="off">
+		<span class="input-group-btn">
+		<button class="btn btn-default btn-search" name="search" type="submit">搜索</button>
+		</span> </div>
+	</form>
+</div>
+-->
+  <div class="left">
+				<select class="select" name="title" id="selectType" onchange="getType()">
+					<option value="Java">
+						Java
+					</option>
+					<option value="Golang">
+						Golang
+					</option>
+					<option value="新闻">
+						新闻
+					</option>
+					<option value="all" selected="selected">
+						all
+					</option>
+					
+				</select>
+			</div>
+
+      <div class="list-item">
+        <div class="item">
+          <div class="layui-fluid">
+            <div class="layui-row">
+              <div class="layui-col-xs12 layui-col-sm4 layui-col-md5">
+                <div class="img"><img src="./img/sy_img1.jpg" alt=""></div>
+              </div>
+              <div class="layui-col-xs12 layui-col-sm8 layui-col-md7">
+                <div class="item-cont">
+                  <h3 id="articleName"><button class="layui-btn layui-btn-danger new-icon">new</button></h3>
+                  <h5 id="articleTitle"></h5>
+                  <p id="articleText"></p>
+                  <a href="details.html" class="go-icon"></a>
+                </div>
+            </div>
+            </div>
+           </div>
+        </div>
+        
+      </div>
+     <!-- <div id="demo" style="text-align: center;"></div> -->
+    </div>
+  </div>
+
+  <div class="footer-wrap">
+    <div class="footer w1000">
+      <div class="qrcode">
+        <img src="./img/erweima.jpg">
+      </div>
+      <div class="practice-mode">
+        <img src="./img/down_img.jpg">
+        <div class="text">
+          <h4 class="title">我的联系方式</h4>
+          <p>微信<span class="WeChat">1234567890</span></p>
+          <p>邮箱<span class="email">1234567890@qq.com</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="./layui/layui.js"></script>
+  <script type="text/javascript">
+    layui.config({
+      base: './js/util/'
+    }).use(['element','laypage','jquery','menu'],function(){
+      element = layui.element,laypage = layui.laypage,$ = layui.$,menu = layui.menu;
+      laypage.render({
+        elem: 'demo'
+        ,count: 70 //数据总数，从服务端得到
+      });
+      menu.init();
+    })
+  </script>
+</body>
+</html>

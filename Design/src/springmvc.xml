@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+        
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/util
+           http://www.springframework.org/schema/util/spring-util.xsd
+           http://www.springframework.org/schema/aop
+           http://www.springframework.org/schema/aop/spring-aop.xsd
+           http://www.springframework.org/schema/tx 
+           http://www.springframework.org/schema/tx/spring-tx.xsd
+           http://www.springframework.org/schema/mvc
+           http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+     
+     <!--1.配置指定注解扫描区域 -->
+    <context:component-scan base-package="controller"/>
+     
+      <!--2.配置视图解析器(渲染器) -->
+    <!--<bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	   <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+	   <property name="prefix" value="WEB-INF/jsp/"></property>
+	   <property name="suffix" value=".jsp"></property>
+	</bean>
+	
+	--><!--3. 文件上传 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+     <property name="defaultEncoding" value="utf8"/>
+     <property name="maxUploadSize" value="102400000"/>	
+     <property name="maxInMemorySize" value="40960"/>
+	</bean>
+	
+	<!-- 4. 配置json转换器 -->
+	<!-- 用于将对象转换为 JSON  -->  
+    <bean id="stringConverter"  
+        class="org.springframework.http.converter.StringHttpMessageConverter">  
+        <property name="supportedMediaTypes">  
+            <list>  
+                <value>text/plain;charset=UTF-8</value>  
+            </list>  
+        </property>  
+    </bean>  
+    <bean id="jsonConverter"  
+        class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>  
+    <bean  
+        class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">  
+        <property name="messageConverters">  
+            <list>  
+                <ref bean="stringConverter" />  
+                <ref bean="jsonConverter" />  
+            </list>  
+        </property>
+    </bean>
+    
+    <!-- 5.拦截器的配置 -->
+    <mvc:interceptors>
+		<!-- 拦截器1的配置 -->
+		<mvc:interceptor>
+			<!-- 配置需要拦截的哪些请求 -->
+			<mvc:mapping path="/leacots.do" />
+			<mvc:mapping path="/new.do"/>
+			<mvc:mapping path="/about.do"/>
+			<mvc:mapping path="/articleList.do"/>
+			<mvc:mapping path="/userList.do"/>
+			<mvc:mapping path="/restart.do"/>
+			<!-- 指定具体的拦截器类 -->
+			<bean class="interceptor.Logininterceptor"></bean>
+		</mvc:interceptor>    
+	</mvc:interceptors>
+         
+     
+   
+    
+</beans>
